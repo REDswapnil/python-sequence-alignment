@@ -1,0 +1,35 @@
+import unittest
+from pathlib import Path
+
+from basic_3 import do_sequence_alignment_wrapper, SequenceAlignReturnDictType, generate_str
+
+
+class MyTestCase(unittest.TestCase):
+
+    def setUp(self) -> None:
+        self.input_file_path = 'SampleTestCases/input{}.txt'
+        self.output_file_path = 'SampleTestCases/output{}.txt'
+
+    def test_basic_algo_sample_testcases(self):
+        print('Running testcases for basic sequence alignment code')
+        counter: int = 1
+        input_file_formatted_path = self.input_file_path.format(counter)
+        input_file_path = Path(input_file_formatted_path)
+        while input_file_path.exists():
+            print(f'Running testcase #{counter}')
+            (s1, s2) = generate_str(input_file_path)
+            response: SequenceAlignReturnDictType = do_sequence_alignment_wrapper(s1, s2)
+            output_file_formatted_path = self.output_file_path.format(counter)
+            output_file_path = Path(output_file_formatted_path)
+            with output_file_path.open() as op:
+                self.assertEqual(op.readline().strip(), str(response.get('score')))
+                # self.assertEqual(op.readline().strip(), response.get('str1_align'))
+                # self.assertEqual(op.readline().strip(), response.get('str2_align'))
+            counter += 1
+            input_file_formatted_path = self.input_file_path.format(counter)
+            input_file_path = Path(input_file_formatted_path)
+
+
+if __name__ == '__main__':
+
+    unittest.main()
