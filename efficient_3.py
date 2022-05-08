@@ -24,12 +24,13 @@ MISMATCH_PENALTY = {
 
 
 def run(str1: str, str2: str, output_file_path: Path):
-    print('Starting Sequence Alignment DP Efficient Algorithm...')
+    # print('Starting Sequence Alignment DP Efficient Algorithm...')
     response = do_sequence_alignment_wrapper(str1, str2)
     write_output_file(response, output_file_path)
-    print('String 1 Alignment: ' + response[1])
-    print('String 2 Alignment: ' + response[2])
-    print('Completed !')
+    # print(f'Alignment Score :: {response[0]}')
+    # print('String 1 Alignment: ' + response[1])
+    # print('String 2 Alignment: ' + response[2])
+    # print('Completed !')
 
 def space_efficient_alignment_score(str1, str2):
     str1_len, str2_len = len(str1), len(str2)
@@ -40,38 +41,36 @@ def space_efficient_alignment_score(str1, str2):
 
     for j in range(1, str1_len+1):
         OPT[0][1] = j * GAP_PENALTY
-       	for i in range(1, str2_len+1):
+        for i in range(1, str2_len+1):
             OPT[i][1] = min(OPT[i-1][1] + GAP_PENALTY, OPT[i][0] + GAP_PENALTY, OPT[i-1][0] + 
-            	MISMATCH_PENALTY[str1[j - 1]][str2[i - 1]])
-       	for i in range(str2_len+1):
-    	    OPT[i][0] = OPT[i][1]
+                MISMATCH_PENALTY[str1[j - 1]][str2[i - 1]])
+        for i in range(str2_len+1):
+            OPT[i][0] = OPT[i][1]
 
     result = []
     for i in range(len(OPT)):
-       	result.append(OPT[i][1])
+        result.append(OPT[i][1])
     return result
 
 
 def divide_and_conquer(str1, str2):
-	str1_len = len(str1)
-	str2_len = len(str2)
-	if str1_len < 2 or str2_len < 2:
-		return do_sequence_alignment(str1, str2)
-	left = space_efficient_alignment_score(str1[:str1_len // 2], str2)
-	right = space_efficient_alignment_score(str1[::-1][:str1_len // 2], str2[::-1])
-
-
-	minimum_cost = math.inf
-	break_index = -1
-	for i in range(len(left)):
-		current_cost = left[i] + right[str2_len - i]
-		if minimum_cost > current_cost:
-			minimum_cost = current_cost
-			break_index = i
-	left, right = [], []
-	left_score, str1_left, str2_left = divide_and_conquer(str1[:str1_len // 2], str2[:break_index])
-	right_score, str1_right, str2_right = divide_and_conquer(str1[str1_len // 2:], str2[break_index:])
-	return (left_score + right_score, str1_left + str1_right, str2_left + str2_right)
+    str1_len = len(str1)
+    str2_len = len(str2)
+    if str1_len < 2 or str2_len < 2:
+        return do_sequence_alignment(str1, str2)
+    left = space_efficient_alignment_score(str1[:str1_len // 2], str2)
+    right = space_efficient_alignment_score(str1[::-1][:str1_len // 2], str2[::-1])
+    minimum_cost = math.inf
+    break_index = -1
+    for i in range(len(left)):
+        current_cost = left[i] + right[str2_len - i]
+        if minimum_cost > current_cost:
+            minimum_cost = current_cost
+            break_index = i
+    # left, right = [], []
+    left_score, str1_left, str2_left = divide_and_conquer(str1[:str1_len // 2], str2[:break_index])
+    right_score, str1_right, str2_right = divide_and_conquer(str1[str1_len // 2:], str2[break_index:])
+    return (left_score + right_score, str1_left + str1_right, str2_left + str2_right)
 
 
 
@@ -105,8 +104,8 @@ def do_sequence_alignment_wrapper(str1: str, str2: str):
     end_time = time.time()
     time_taken: float = (end_time - start_time) * 1000
     memory_consumed: int = process_memory()
-    print(f'Time taken :: {time_taken}')
-    print(f'Process Memory :: {memory_consumed}')
+    # print(f'Time taken :: {time_taken}')
+    # print(f'Process Memory :: {memory_consumed}')
     return (score, str1_align, str2_align, time_taken, memory_consumed)
 
 
@@ -186,7 +185,7 @@ def get_alignment(min_pointer_array, str1: str, str2: str):
             "".join(str2_align[str_align_usable_index: len(str2_align)]))
 
 def write_output_file(response, output_file_path: Path):
-    print(f'Writing output file to {output_file_path}')
+    # print(f'Writing output file to {output_file_path}')
     with output_file_path.open('w') as op:
         op.write(str(response[0]) + '\n')
         op.write(str(response[1]) + '\n')
@@ -204,7 +203,7 @@ def pretty_print(msg: str or int or float):
 
 
 def generate_str(input_file_path: Path):
-    print('Generating input strings')
+    # print('Generating input strings')
     str1 = str()
     str2= str()
     temp_str = str()
@@ -229,20 +228,20 @@ def process_memory():
 
 if __name__ == '__main__':
 
-    print('Waking up...')
+    # print('Waking up...')
 
     if len(sys.argv) != 3:
-        print('Insufficient Arguments')
+        # print('Insufficient Arguments')
         sys.exit(1)
 
     input_file = Path(sys.argv[1])
     if not input_file.exists() or not input_file.is_file():
-        print(f'Input file {sys.argv[1]} does not exist')
+        # print(f'Input file {sys.argv[1]} does not exist')
         sys.exit(1)
 
     output_file = Path(sys.argv[2])
     if output_file.is_dir() or not output_file.parent.exists():
-        print('Output file has no valid parent directory or is itself a directory. Expected a valid file path')
+        # print('Output file has no valid parent directory or is itself a directory. Expected a valid file path')
         sys.exit(1)
     if not output_file.exists():
         output_file.touch()
