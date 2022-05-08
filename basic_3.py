@@ -1,6 +1,6 @@
 import sys
 from pathlib import Path
-from typing import Tuple, List, Dict, TypedDict
+from typing import Tuple, List, TypedDict
 import math
 import psutil
 import time
@@ -24,22 +24,23 @@ class SequenceAlignReturnDictType(TypedDict):
 
 
 def run(str1: str, str2: str, output_file_path: Path):
-    pretty_print('Starting Sequence Alignment DP Basic Algorithm...')
+    print('Starting Sequence Alignment DP Basic Algorithm...')
     response: SequenceAlignReturnDictType = do_sequence_alignment_wrapper(str1, str2)
     write_output_file(response, output_file_path)
-    pretty_print('Completed !')
+    print('Completed !')
 
 
 def do_sequence_alignment(str1: str, str2: str) -> Tuple[int, str, str]:
-    pretty_print('Performing Sequence Alignment DP Basic Run')
+    print('Performing Sequence Alignment DP Basic Run')
     str1_len = len(str1)
     str2_len = len(str2)
-    pretty_print(f'String 01: {str1} (length - {str1_len}) and String 02: {str2} (length - {str2_len})')
-    pretty_print('Initializing memo array...')
+    print(f'String 01: {str1} (length - {str1_len}')
+    print(f'String 02: {str2} (length - {str2_len})')
+    print('Initializing memo array...')
     memo_array: List = initialize(str1_len + 1, str2_len + 1)
     min_pointer: List[List[Tuple | None]] = initialize(str1_len + 1, str2_len + 1)
-    # pretty_print_matrix(memo_array)
-    pretty_print('Building memo array ...')
+    # print_matrix(memo_array)
+    print('Building memo array ...')
     for i in range(1, str1_len + 1):
         for j in range(1, str2_len + 1):
             score_list: List = [MISMATCH_PENALTY[str1[i - 1]][str2[j - 1]] + memo_array[i - 1][j - 1],
@@ -56,12 +57,12 @@ def do_sequence_alignment(str1: str, str2: str) -> Tuple[int, str, str]:
                 min_pointer[i][j] = (i - 1, j)
             else:
                 min_pointer[i][j] = (i, j - 1)
-    # pretty_print_matrix(memo_array)
-    pretty_print(f'Alignment Score :: {memo_array[str1_len][str2_len]}')
+    # print_matrix(memo_array)
+    print(f'Alignment Score :: {memo_array[str1_len][str2_len]}')
     # str1_alignment, str2_alignment = get_alignment(memo_array, str1, str2)
     str1_alignment, str2_alignment = get_alignment(min_pointer, str1, str2)
-    pretty_print(f'Str1 Alignment :: {str1_alignment}')
-    pretty_print(f'Str2 Alignment :: {str2_alignment}')
+    print(f'Str1 Alignment :: {str1_alignment}')
+    print(f'Str2 Alignment :: {str2_alignment}')
     return memo_array[str1_len][str2_len], str1_alignment, str2_alignment
 
 
@@ -71,8 +72,8 @@ def do_sequence_alignment_wrapper(str1: str, str2: str) -> SequenceAlignReturnDi
     end_time = time.time()
     time_taken: float = (end_time - start_time) * 1000
     memory_consumed: int = process_memory()
-    pretty_print(f'Time taken :: {time_taken}')
-    pretty_print(f'Process Memory :: {memory_consumed}')
+    print(f'Time taken :: {time_taken}')
+    print(f'Process Memory :: {memory_consumed}')
     return {'score': score, 'str1_align': str1_align, 'str2_align': str2_align, 'time': time_taken,
             'memory': memory_consumed}
 
@@ -95,7 +96,7 @@ def initialize(str1_len: int, str2_len: int) -> List:
 
 
 def get_alignment(min_pointer_array: List, str1: str, str2: str) -> Tuple[str, str]:
-    pretty_print(f'Getting alignment of the 2 strings from the memo array')
+    print(f'Getting alignment of the 2 strings from the memo array')
     align_len = len(str1) + len(str2)
     str1_align: List = [None] * (align_len + 1)
     str2_align: List = [None] * (align_len + 1)
@@ -155,7 +156,7 @@ def get_alignment(min_pointer_array: List, str1: str, str2: str) -> Tuple[str, s
 
 
 def write_output_file(response: SequenceAlignReturnDictType, output_file_path: Path):
-    pretty_print(f'Writing output file to {output_file_path}')
+    print(f'Writing output file to {output_file_path}')
     with output_file_path.open('w') as op:
         op.write(str(response.get('score')) + '\n')
         op.write(str(response.get('str1_align')) + '\n')
@@ -165,7 +166,7 @@ def write_output_file(response: SequenceAlignReturnDictType, output_file_path: P
 
 
 # def get_alignment(memo_array: List, str1: str, str2: str) -> Tuple[str, str]:
-#     pretty_print(f'Getting alignment of the 2 strings from the memo array')
+#     print(f'Getting alignment of the 2 strings from the memo array')
 #     align_len = len(str1) + len(str2)
 #     str1_align: List = [None] * (align_len + 1)
 #     str2_align: List = [None] * (align_len + 1)
@@ -224,7 +225,7 @@ def write_output_file(response: SequenceAlignReturnDictType, output_file_path: P
 #             "".join(str2_align[str_align_usable_index: len(str2_align)]))
 
 
-def pretty_print_matrix(matrix):
+def print_matrix(matrix):
     for row in matrix:
         print(row)
 
@@ -259,20 +260,20 @@ def process_memory() -> int:
 
 if __name__ == '__main__':
 
-    pretty_print('Waking up...')
+    print('Waking up...')
 
     if len(sys.argv) != 3:
-        pretty_print('Insufficient Arguments')
+        print('Insufficient Arguments')
         sys.exit(1)
 
     input_file = Path(sys.argv[1])
     if not input_file.exists() or not input_file.is_file():
-        pretty_print(f'Input file {sys.argv[1]} does not exist')
+        print(f'Input file {sys.argv[1]} does not exist')
         sys.exit(1)
 
     output_file = Path(sys.argv[2])
     if output_file.is_dir() or not output_file.parent.exists():
-        pretty_print('Output file has no valid parent directory or is itself a directory. Expected a valid file path')
+        print('Output file has no valid parent directory or is itself a directory. Expected a valid file path')
         sys.exit(1)
     if not output_file.exists():
         output_file.touch()

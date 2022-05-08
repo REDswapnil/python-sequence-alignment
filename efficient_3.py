@@ -24,12 +24,12 @@ MISMATCH_PENALTY = {
 
 
 def run(str1: str, str2: str, output_file_path: Path):
-    pretty_print('Starting Sequence Alignment DP Efficient Algorithm...')
+    print('Starting Sequence Alignment DP Efficient Algorithm...')
     response = do_sequence_alignment_wrapper(str1, str2)
     write_output_file(response, output_file_path)
-    pretty_print('String 1 Alignment: ' + response[1])
-    pretty_print('String 2 Alignment: ' + response[2])
-    pretty_print('Completed !')
+    print('String 1 Alignment: ' + response[1])
+    print('String 2 Alignment: ' + response[2])
+    print('Completed !')
 
 def space_efficient_alignment_score(str1, str2):
     str1_len, str2_len = len(str1), len(str2)
@@ -83,7 +83,7 @@ def do_sequence_alignment(str1: str, str2: str):
     min_pointer = initialize(str1_len + 1, str2_len + 1)
     for i in range(1, str1_len + 1):
         for j in range(1, str2_len + 1):
-            score_list: List = [MISMATCH_PENALTY[str1[i - 1]][str2[j - 1]] + memo_array[i - 1][j - 1],
+            score_list = [MISMATCH_PENALTY[str1[i - 1]][str2[j - 1]] + memo_array[i - 1][j - 1],
                                 GAP_PENALTY + memo_array[i - 1][j],
                                 GAP_PENALTY + memo_array[i][j - 1]]
             memo_array[i][j] = min(score_list)
@@ -94,7 +94,7 @@ def do_sequence_alignment(str1: str, str2: str):
                 min_pointer[i][j] = (i - 1, j)
             else:
                 min_pointer[i][j] = (i, j - 1)
-    # pretty_print_matrix(memo_array)
+    # print_matrix(memo_array)
     str1_alignment, str2_alignment = get_alignment(min_pointer, str1, str2)
     return (memo_array[str1_len][str2_len], str1_alignment, str2_alignment)
 
@@ -105,8 +105,8 @@ def do_sequence_alignment_wrapper(str1: str, str2: str):
     end_time = time.time()
     time_taken: float = (end_time - start_time) * 1000
     memory_consumed: int = process_memory()
-    pretty_print(f'Time taken :: {time_taken}')
-    pretty_print(f'Process Memory :: {memory_consumed}')
+    print(f'Time taken :: {time_taken}')
+    print(f'Process Memory :: {memory_consumed}')
     return (score, str1_align, str2_align, time_taken, memory_consumed)
 
 
@@ -186,7 +186,7 @@ def get_alignment(min_pointer_array, str1: str, str2: str):
             "".join(str2_align[str_align_usable_index: len(str2_align)]))
 
 def write_output_file(response, output_file_path: Path):
-    pretty_print(f'Writing output file to {output_file_path}')
+    print(f'Writing output file to {output_file_path}')
     with output_file_path.open('w') as op:
         op.write(str(response[0]) + '\n')
         op.write(str(response[1]) + '\n')
@@ -194,7 +194,7 @@ def write_output_file(response, output_file_path: Path):
         op.write(str(response[3]) + '\n')
         op.write(str(response[4]) + '\n')
 
-def pretty_print_matrix(matrix):
+def print_matrix(matrix):
     for row in matrix:
         print(row)
 
@@ -229,20 +229,20 @@ def process_memory():
 
 if __name__ == '__main__':
 
-    pretty_print('Waking up...')
+    print('Waking up...')
 
     if len(sys.argv) != 3:
-        pretty_print('Insufficient Arguments')
+        print('Insufficient Arguments')
         sys.exit(1)
 
     input_file = Path(sys.argv[1])
     if not input_file.exists() or not input_file.is_file():
-        pretty_print(f'Input file {sys.argv[1]} does not exist')
+        print(f'Input file {sys.argv[1]} does not exist')
         sys.exit(1)
 
     output_file = Path(sys.argv[2])
     if output_file.is_dir() or not output_file.parent.exists():
-        pretty_print('Output file has no valid parent directory or is itself a directory. Expected a valid file path')
+        print('Output file has no valid parent directory or is itself a directory. Expected a valid file path')
         sys.exit(1)
     if not output_file.exists():
         output_file.touch()
