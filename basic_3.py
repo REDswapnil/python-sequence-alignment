@@ -212,8 +212,4 @@ if __name__ == '__main__':
 
     (s1, s2) = generate_str(input_file)
 
-    # s1 = 'AGGGCT'
-    # s2 = 'AGGCA'
-    # AGGGCT
-    # A_GGCA
     run(s1, s2, output_file)
