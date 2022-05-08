@@ -11,9 +11,12 @@ Both implementations are written in pure Python.
 Only Python - 3.10.0 is supported due to the usage of type-hinting syntax introduced in this version.
 
 Running the script:
+```
 python basic_3.sh SampleTestCases/input1.txt output.txt
+```
+```
 python efficient_2.sh SampleTestCases/input1.txt output.txt
-
+```
 Both the scripts will require 2 arguments:
 1. The sample input from the mentioned directory
 2. The output file to which the results will be written to
