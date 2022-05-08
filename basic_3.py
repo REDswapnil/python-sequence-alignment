@@ -162,8 +162,8 @@ def print_matrix(matrix):
         print(row)
 
 
-def pretty_print(msg: str | int | float):
-    print('\n' + str(msg) + '\n')
+# def pretty_print(msg: str | int | float):
+#     print('\n' + str(msg) + '\n')
 
 
 def generate_str(input_file_path: Path):

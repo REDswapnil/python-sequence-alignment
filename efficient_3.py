@@ -35,13 +35,16 @@ def run(str1: str, str2: str, output_file_path: Path):
 def space_efficient_alignment_score(str1, str2):
     str1_len, str2_len = len(str1), len(str2)
     OPT = [[0 for j in range(2)] for i in range(str2_len + 1)]
+
+    # print(len(OPT))
+    # print(len(OPT[1]))
         
-    for i in range(str2_len+1):
+    for i in range(str2_len + 1):
         OPT[i][0] = i * GAP_PENALTY
 
-    for j in range(1, str1_len+1):
+    for j in range(1, str1_len + 1):
         OPT[0][1] = j * GAP_PENALTY
-        for i in range(1, str2_len+1):
+        for i in range(1, str2_len + 1):
             OPT[i][1] = min(OPT[i-1][1] + GAP_PENALTY, OPT[i][0] + GAP_PENALTY, OPT[i-1][0] + 
                 MISMATCH_PENALTY[str1[j - 1]][str2[i - 1]])
         for i in range(str2_len+1):
@@ -58,8 +61,9 @@ def divide_and_conquer(str1, str2):
     str2_len = len(str2)
     if str1_len < 2 or str2_len < 2:
         return do_sequence_alignment(str1, str2)
-    left = space_efficient_alignment_score(str1[:str1_len // 2], str2)
-    right = space_efficient_alignment_score(str1[::-1][:str1_len // 2], str2[::-1])
+    left = space_efficient_alignment_score(str1[:(str1_len // 2)], str2)
+    sr = str1[str1_len // 2:]
+    right = space_efficient_alignment_score(sr[::-1], str2[::-1])
     minimum_cost = math.inf
     break_index = -1
     for i in range(len(left)):
