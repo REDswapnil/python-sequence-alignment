@@ -15,7 +15,7 @@ Running the script:
 python basic_3.sh SampleTestCases/input1.txt output.txt
 ```
 ```
-python efficient_2.sh SampleTestCases/input1.txt output.txt
+python efficient_3.sh SampleTestCases/input1.txt output.txt
 ```
 Both the scripts will require 2 arguments:
 1. The sample input from the mentioned directory
